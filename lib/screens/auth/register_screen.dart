@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:edututormobile/widgets/custom_button.dart';
 import 'package:edututormobile/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';

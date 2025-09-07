@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
@@ -8,9 +10,25 @@ class StudentDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<_DashboardItem> items = [
+      _DashboardItem("Profile", Icons.person, Colors.blue, () {}),
+      _DashboardItem("Course Enrollment", Icons.book, Colors.orange, () {}),
+      _DashboardItem("Payment History", Icons.history, Colors.purple, () {}),
+      _DashboardItem("Result", Icons.grade, Colors.green, () {}),
+      _DashboardItem("Schedule", Icons.schedule, Colors.red, () {}),
+      _DashboardItem("Payment", Icons.payment, Colors.teal, () {
+        Navigator.pushNamed(context, AppRoutes.payment);
+      }),
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student Dashboard'),
+        elevation: 0,
+        backgroundColor: Colors.deepPurple,
+        title: const Text(
+          'Student Dashboard',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             onPressed: () {},
@@ -32,44 +50,78 @@ class StudentDashboard extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildDashboardButton('Profile', Icons.person, () {}),
-              _buildDashboardButton('Course Enrollment', Icons.book, () {}),
-              _buildDashboardButton('Payment History', Icons.history, () {}),
-            ],
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepPurple, Colors.indigo],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildDashboardButton('Result', Icons.grade, () {}),
-              _buildDashboardButton('Schedule', Icons.schedule, () {}),
-              _buildDashboardButton('Payment', Icons.payment, () {
-                Navigator.pushNamed(context, AppRoutes.payment);
-              }),
-            ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: GridView.builder(
+            itemCount: items.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // 2 per row
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 1,
+            ),
+            itemBuilder: (context, index) {
+              final item = items[index];
+              return GestureDetector(
+                onTap: item.onPressed,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white.withOpacity(0.3)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: item.color.withOpacity(0.5),
+                        blurRadius: 12,
+                        spreadRadius: 2,
+                        offset: const Offset(2, 6),
+                      )
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 35,
+                        backgroundColor: item.color.withOpacity(0.9),
+                        child: Icon(item.icon, size: 40, color: Colors.white),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        item.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
-        ],
+        ),
       ),
     );
   }
+}
 
-  Widget _buildDashboardButton(
-      String text, IconData icon, VoidCallback onPressed) {
-    return Column(
-      children: [
-        IconButton(
-          icon: Icon(icon),
-          onPressed: onPressed,
-          iconSize: 40,
-        ),
-        Text(text),
-      ],
-    );
-  }
+class _DashboardItem {
+  final String title;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onPressed;
+
+  _DashboardItem(this.title, this.icon, this.color, this.onPressed);
 }

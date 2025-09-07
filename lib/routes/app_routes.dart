@@ -5,6 +5,7 @@ import '../screens/auth/splash_screen.dart';
 import '../screens/admin/admin_dashboard.dart';
 import '../screens/student/student_dashboard.dart';
 import '../screens/teacher/teacher_dashboard.dart';
+import '../screens/teacher/teacher_profile_screen.dart';
 import '../screens/payment/payment_screen.dart';
 
 class AppRoutes {
@@ -15,6 +16,7 @@ class AppRoutes {
   static const String studentDashboard = '/student-dashboard';
   static const String teacherDashboard = '/teacher-dashboard';
   static const String payment = '/payment';
+  static const String teacherProfile = '/teacher-profile';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -25,6 +27,7 @@ class AppRoutes {
       studentDashboard: (context) => const StudentDashboard(),
       teacherDashboard: (context) => const TeacherDashboard(),
       payment: (context) => const PaymentScreen(),
+      teacherProfile: (context) => const TeacherProfileScreen(),
     };
   }
 }
