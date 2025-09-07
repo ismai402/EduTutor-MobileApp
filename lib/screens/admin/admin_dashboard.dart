@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
+import '../../routes/app_routes.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -8,6 +11,77 @@ class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Admin Dashboard'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.home),
+            tooltip: 'Home',
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.person),
+            tooltip: 'Profile',
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications),
+            tooltip: 'Notifications',
+          ),
+          IconButton(
+            onPressed: () {
+              Provider.of<AuthProvider>(context, listen: false).logout();
+              Navigator.pushReplacementNamed(context, AppRoutes.login);
+            },
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Admin Panel',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.people),
+              title: const Text('Student Management'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.school),
+              title: const Text('Teacher Management'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.book),
+              title: const Text('Course Management'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.payment),
+              title: const Text('Payment Management'),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.payment);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.schedule),
+              title: const Text('Schedule Management'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -21,19 +95,19 @@ class AdminDashboard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                AdminStatCard(
+                _AdminStatCard(
                   icon: Icons.people,
                   label: 'Students',
                   value: '350', // Replace with dynamic value
                   color: Colors.blue,
                 ),
-                AdminStatCard(
+                _AdminStatCard(
                   icon: Icons.school,
                   label: 'Teachers',
                   value: '25', // Replace with dynamic value
                   color: Colors.green,
                 ),
-                AdminStatCard(
+                _AdminStatCard(
                   icon: Icons.book,
                   label: 'Courses',
                   value: '12', // Replace with dynamic value
@@ -51,27 +125,29 @@ class AdminDashboard extends StatelessWidget {
               spacing: 16,
               runSpacing: 16,
               children: [
-                AdminQuickAction(
+                _AdminQuickAction(
                   icon: Icons.people,
                   label: 'Student Management',
                   onTap: () {},
                 ),
-                AdminQuickAction(
+                _AdminQuickAction(
                   icon: Icons.school,
                   label: 'Teacher Management',
                   onTap: () {},
                 ),
-                AdminQuickAction(
+                _AdminQuickAction(
                   icon: Icons.book,
                   label: 'Course Management',
                   onTap: () {},
                 ),
-                AdminQuickAction(
+                _AdminQuickAction(
                   icon: Icons.payment,
                   label: 'Payment Management',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.payment);
+                  },
                 ),
-                AdminQuickAction(
+                _AdminQuickAction(
                   icon: Icons.schedule,
                   label: 'Schedule Management',
                   onTap: () {},
@@ -105,14 +181,14 @@ class AdminDashboard extends StatelessWidget {
   }
 }
 
-// Admin Stat Card Widget
-class AdminStatCard extends StatelessWidget {
+// Admin Stat Card
+class _AdminStatCard extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
   final Color color;
 
-  const AdminStatCard({
+  const _AdminStatCard({
     required this.icon,
     required this.label,
     required this.value,
@@ -147,13 +223,13 @@ class AdminStatCard extends StatelessWidget {
   }
 }
 
-// Admin Quick Action Widget
-class AdminQuickAction extends StatelessWidget {
+// Admin Quick Action
+class _AdminQuickAction extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
 
-  const AdminQuickAction({
+  const _AdminQuickAction({
     required this.icon,
     required this.label,
     required this.onTap,
