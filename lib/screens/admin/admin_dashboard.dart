@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../routes/app_routes.dart';
+import 'student_management.dart';
+import 'payment_management.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -55,7 +57,14 @@ class AdminDashboard extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.people),
               title: const Text('Student Management'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StudentManagementScreen(),
+                  ),
+                );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.school),
@@ -71,7 +80,12 @@ class AdminDashboard extends StatelessWidget {
               leading: const Icon(Icons.payment),
               title: const Text('Payment Management'),
               onTap: () {
-                Navigator.pushNamed(context, AppRoutes.payment);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PaymentManagementScreen(),
+                  ),
+                );
               },
             ),
             ListTile(
