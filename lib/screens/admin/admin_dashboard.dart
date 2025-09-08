@@ -8,10 +8,25 @@ import 'student_management.dart';
 import 'payment_management.dart';
 
 class AdminDashboard extends StatelessWidget {
+  void _showComingSoon(BuildContext context, String feature) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$feature coming soon!')),
+    );
+  }
+
   const AdminDashboard({super.key});
+
+  // Example: Replace with actual data source or provider in real app
+  final int studentCount = 350;
+  final int teacherCount = 25;
+  final int courseCount = 12;
 
   @override
   Widget build(BuildContext context) {
+    // Responsive padding for mobile and larger screens
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double horizontalPadding = screenWidth < 400 ? 8.0 : 20.0;
+    final double verticalPadding = screenWidth < 400 ? 8.0 : 20.0;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
@@ -97,35 +112,44 @@ class AdminDashboard extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding,
+          vertical: verticalPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Welcome, Admin!',
+              'Welcome to Admin Dashboard',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _AdminStatCard(
-                  icon: Icons.people,
-                  label: 'Students',
-                  value: '350', // Replace with dynamic value
-                  color: Colors.blue,
+                Flexible(
+                  child: _AdminStatCard(
+                    icon: Icons.people,
+                    label: 'Students',
+                    value: studentCount.toString(),
+                    color: Colors.blue,
+                  ),
                 ),
-                _AdminStatCard(
-                  icon: Icons.school,
-                  label: 'Teachers',
-                  value: '25', // Replace with dynamic value
-                  color: Colors.green,
+                Flexible(
+                  child: _AdminStatCard(
+                    icon: Icons.school,
+                    label: 'Teachers',
+                    value: teacherCount.toString(),
+                    color: Colors.green,
+                  ),
                 ),
-                _AdminStatCard(
-                  icon: Icons.book,
-                  label: 'Courses',
-                  value: '12', // Replace with dynamic value
-                  color: Colors.orange,
+                Flexible(
+                  child: _AdminStatCard(
+                    icon: Icons.book,
+                    label: 'Courses',
+                    value: courseCount.toString(),
+                    color: Colors.orange,
+                  ),
                 ),
               ],
             ),
@@ -142,29 +166,41 @@ class AdminDashboard extends StatelessWidget {
                 _AdminQuickAction(
                   icon: Icons.people,
                   label: 'Student Management',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const StudentManagementScreen(),
+                      ),
+                    );
+                  },
                 ),
                 _AdminQuickAction(
                   icon: Icons.school,
                   label: 'Teacher Management',
-                  onTap: () {},
+                  onTap: () => _showComingSoon(context, 'Teacher Management'),
                 ),
                 _AdminQuickAction(
                   icon: Icons.book,
                   label: 'Course Management',
-                  onTap: () {},
+                  onTap: () => _showComingSoon(context, 'Course Management'),
                 ),
                 _AdminQuickAction(
                   icon: Icons.payment,
                   label: 'Payment Management',
                   onTap: () {
-                    Navigator.pushNamed(context, AppRoutes.payment);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentManagementScreen(),
+                      ),
+                    );
                   },
                 ),
                 _AdminQuickAction(
                   icon: Icons.schedule,
                   label: 'Schedule Management',
-                  onTap: () {},
+                  onTap: () => _showComingSoon(context, 'Schedule Management'),
                 ),
               ],
             ),
