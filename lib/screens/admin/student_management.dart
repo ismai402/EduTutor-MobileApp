@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, deprecated_member_use
+// ignore_for_file: prefer_const_constructors, deprecated_member_use, sort_child_properties_last
 
 import 'package:flutter/material.dart';
+import '../../services/gemini_service.dart';
 
 class StudentManagementScreen extends StatelessWidget {
   const StudentManagementScreen({Key? key}) : super(key: key);
@@ -82,53 +83,20 @@ class StudentManagementScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  _StatCard(
-                      label: 'Total',
-                      value: students.length.toString(),
-                      color: Colors.blueAccent),
-                  const SizedBox(width: 12),
-                  _StatCard(
-                      label: 'Active',
-                      value: students
-                          .where((s) => s['status'] == 'Active')
-                          .length
-                          .toString(),
-                      color: Colors.green),
-                  const SizedBox(width: 12),
-                  _StatCard(
-                      label: 'Inactive',
-                      value: students
-                          .where((s) => s['status'] == 'Inactive')
-                          .length
-                          .toString(),
-                      color: Colors.redAccent),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
+            // ...rest of your widgets...
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(20),
                 itemCount: students.length,
                 itemBuilder: (context, index) {
                   final student = students[index];
                   return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
+                    margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage(student['avatar']!),
-                        radius: 28,
                       ),
-                      title: Text(student['name']!,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      title: Text(student['name']!),
                       subtitle: Text(student['email']!),
                       trailing: Container(
                         padding: const EdgeInsets.symmetric(
@@ -150,13 +118,13 @@ class StudentManagementScreen extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        // Show student details or actions
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
                             title: Text(student['name']!),
                             content: Text(
-                                'Email: ${student['email']}\nStatus: ${student['status']}'),
+                              'Email: ${student['email']}\nStatus: ${student['status']}',
+                            ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context),
@@ -174,35 +142,67 @@ class StudentManagementScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color color;
-  const _StatCard(
-      {required this.label, required this.value, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Text(value,
-                style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold, color: color)),
-            const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 13, color: color)),
-          ],
-        ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.smart_toy),
+        tooltip: 'Ask Gemini AI',
+        onPressed: () async {
+          final TextEditingController promptController =
+              TextEditingController();
+          String? aiResponse;
+          await showDialog(
+            context: context,
+            builder: (context) {
+              return StatefulBuilder(
+                builder: (context, setState) {
+                  return AlertDialog(
+                    title: Text('Ask Gemini AI'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          controller: promptController,
+                          decoration: InputDecoration(
+                              hintText: 'Enter your question...'),
+                        ),
+                        SizedBox(height: 16),
+                        if (aiResponse != null)
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              aiResponse!,
+                              style: TextStyle(color: Colors.black87),
+                            ),
+                          ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text('Close'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            aiResponse = 'Loading...';
+                          });
+                          final gemini = GeminiService(
+                              apiKey:
+                                  'AIzaSyCPbd9y1ucsuMnRWVs3GFDg_67SGV3gFGs');
+                          final response = await gemini
+                              .generateContent(promptController.text);
+                          setState(() {
+                            aiResponse = response ?? 'No response from AI.';
+                          });
+                        },
+                        child: Text('Ask'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }

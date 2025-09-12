@@ -13,6 +13,7 @@ class AdminDataService {
       };
     }).toList();
   }
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<int> getStudentCount() async {

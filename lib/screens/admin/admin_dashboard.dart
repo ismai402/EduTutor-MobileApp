@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../routes/app_routes.dart';
 import 'student_management.dart';
-// Ensure that 'student_management.dart' exports a class named 'StudentManagementScreen'.
 import 'payment_management.dart';
+
 
 class AdminDashboard extends StatelessWidget {
   void _showComingSoon(BuildContext context, String feature) {
